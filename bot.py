@@ -88,7 +88,7 @@ def analyze_warehouse(rows, headers, target_wh):
             except: pass
         exp_s = ''
         if exp_idx is not None and r[exp_idx]:
-try: exp_s = r[exp_idx].strftime('%d-%b') if isinstance(r[exp_idx], datetime) else str(r[exp_idx])[:10]
+            try: exp_s = r[exp_idx].strftime('%d-%b') if isinstance(r[exp_idx], datetime) else str(r[exp_idx])[:10]
             except: pass
         prods.append({
             'brand': str(r[col.get('brand', 10)] or ''),
@@ -178,7 +178,7 @@ def generate_report_excel(a):
     ws2.append(['Quantity', a['tQ']])
     ws2.append(['MRP Value', f'₹{a["tMRP"]:.0f}'])
     ws2.append(['Tentative Final', f'₹{a["tTF"]:.2f}'])
-ws2.append(['Final MRP', f'₹{a["tFM"]:.2f}'])
+    ws2.append(['Final MRP', f'₹{a["tFM"]:.2f}'])
     ws2.append(['Discount %', f'{a["disc"]:.1f}%'])
     ws2.append([])
     ws2.append(['Verdict', 'STRONG BUY' if a['disc'] >= 25 else 'CONSIDER' if a['disc'] >= 15 else 'WEAK BUY' if a['disc'] >= 10 else 'SKIP'])
@@ -275,7 +275,7 @@ async def handle_document(update: Update, context):
                 if wh_col_idx is not None: break
         if wh_col_idx is None:
             await status_msg.edit_text("❌ File mein 'warehouse_id' column nahi mila!")
-os.unlink(tmp_name); return
+            os.unlink(tmp_name); return
         row_start = 2
         all_rows = []
         for row in ws.iter_rows(min_row=row_start, max_row=ws.max_row, values_only=True):
@@ -361,7 +361,7 @@ async def all_cmd(update: Update, context):
                 msg += f"🏭 *{wh}*\n"
                 msg += f"  Products: {len(a['prods'])} | Qty: {a['tQ']:,}\n"
                 msg += f"  MRP: {fmt(a['tMRP'])} | TF: {fmt(a['tTF'])} | Disc: {a['disc']:.1f}%\n\n"
-await update.message.reply_text(msg, parse_mode='Markdown')
+        await update.message.reply_text(msg, parse_mode='Markdown')
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {str(e)}")
 
